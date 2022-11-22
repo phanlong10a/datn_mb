@@ -33,7 +33,7 @@ export enum COLORS {
   GREEN_500 = "#D4FAD8",
   GREEN_600 = "#F5FFF6",
   // RED COLORS
-  RED_100 = "rgba(136, 13, 7, 1)",
+  RED_100 = "#FF4A4A",
   RED_200 = "rgba(200, 14, 0, 1)",
   RED_300 = "rgba(244, 67, 54, 1)",
   RED_400 = "rgba(242, 123, 114, 1)",

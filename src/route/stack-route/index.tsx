@@ -12,7 +12,6 @@ const RootStackRoute = () => {
     return (
         <>
             <RootStack.Navigator
-
                 initialRouteName="Welcome"
             >
                 <RootStack.Screen name={"Welcome"} component={Welcome} options={{ headerShown: false }} />
