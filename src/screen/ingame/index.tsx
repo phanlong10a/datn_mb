@@ -4,6 +4,8 @@ import React, { useState } from 'react'
 import { Alert, FlatList, Image, ImageBackground, Text, TextInput, View } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { image } from '../../configs/ImageCollection'
+import { useUpdate } from 'ahooks';
+
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 const image1 = require('../../../assets/www/pics_lg/1.png')
 const image2 = require('../../../assets/www/pics_lg/2.png')
@@ -33,6 +35,7 @@ const Ingame = ({ navigation, route }: any) => {
     const [userData, setUserData] = useState<any>(null);
     const [answer, setAnswer] = useState('')
     const [text, setText] = React.useState("");
+    const update = useUpdate();
 
     const renderItem = (item: any) => {
 
@@ -105,12 +108,10 @@ const Ingame = ({ navigation, route }: any) => {
     }, [route.params])
 
     const onChangeText = (text: string) => {
-        console.log("🚀 ~ file: index.tsx:108 ~ onChangeText ~ text", text.replace(/\s/g, '').toLowerCase())
-        console.log("🚀 ~ file: index.tsx:108 ~ onChangeText ~ text", answer.toLowerCase())
         if (text.replace(/\s/g, '').toLowerCase() == answer.toLowerCase()) {
             Alert.alert(
-                'Chính xác',
-                'Đáp án bạn đưa ra đã chính xác',
+                'Correct!',
+                'Your answer is correct!',
                 [{
                     text: 'OK',
                     onPress: async () => {
@@ -151,15 +152,15 @@ const Ingame = ({ navigation, route }: any) => {
             const dataUser = JSON.parse(userData)
             if (dataUser.currentPoint < 10) {
                 Alert.alert(
-                    'Hết điểm',
-                    'Bạn đã hết điểm để nhận gợi ý',
+                    'Cash out!',
+                    'You have not money to hint!',
                     [{
                         text: 'OK'
                     }]
                 )
             } else {
                 Alert.alert(
-                    'Gợi ý của bạn là',
+                    'Your hint is:',
                     route.params?.data?.hint,
                     [{
                         text: 'OK',
@@ -180,8 +181,24 @@ const Ingame = ({ navigation, route }: any) => {
 
     }
 
+    const addPoint = async () => {
+        try {
+            const userData = await AsyncStorage.getItem('user')
+            if (userData !== null) {
+                const userParse = JSON.parse(userData)
+                const dataSave = {
+                    currentPoint: userParse.currentPoint + 10,
+                    currentIngameLevel: userParse.currentIngameLevel,
+                }
+                await AsyncStorage.setItem('user', JSON.stringify(dataSave))
+                setUserData(dataSave)
+            }
+        } catch (error) {
+        }
+    }
 
-    console.log(route.params.data)
+
+
 
     return <>
         <View style={{
@@ -241,7 +258,18 @@ const Ingame = ({ navigation, route }: any) => {
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                        }}>
+                        }}
+                        onPress={() => { 
+                            Alert.alert('Success', 'You have successfully to recive 10 points',[
+                                {
+                                    text: 'OK',
+                                    onPress: async () => {
+                                        await addPoint()
+                                    }
+                                }
+                            ])
+                         }} 
+                        >
                             <Text style={{
                                 fontSize: 30,
                                 lineHeight: 30
@@ -337,11 +365,17 @@ const Ingame = ({ navigation, route }: any) => {
                             <View>
                                 <TextInput
                                     style={{
-                                        height: 40,
-                                        borderWidth: 1,
-                                        width: '100%'
+                                        height: 60,
+                                        borderWidth: 0,
+                                        borderBottomWidth: 1,
+                                        textAlign:'center',
+                                        width: '100%',
+                                        fontFamily: 'LuckiestGuy-Regular',
+                                        fontSize: 30,
+                                        color: '#570149'
                                     }}
                                     onChangeText={onChangeText}
+
                                 />
                             </View>
                         </KeyboardAwareScrollView>

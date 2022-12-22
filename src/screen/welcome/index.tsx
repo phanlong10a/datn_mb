@@ -1,10 +1,31 @@
+import AsyncStorage from '@react-native-community/async-storage'
+import { StackActions } from '@react-navigation/native'
 import Box from '@src/components/Box'
 import React from 'react'
-import { Image, ImageBackground, SafeAreaView, Text, View } from 'react-native'
+import { Alert, Image, ImageBackground, SafeAreaView, Text, View } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import LinearGradient from 'react-native-linear-gradient'
 
 const Welcome = ({ navigation }: any) => {
+
+
+    const addPoint = async () => {
+        try {
+            const userData = await AsyncStorage.getItem('user')
+            if (userData !== null) {
+                const userParse = JSON.parse(userData)
+                const dataSave = {
+                    currentPoint: userParse.currentPoint + 10,
+                    currentIngameLevel: userParse.currentIngameLevel,
+                }
+                await AsyncStorage.setItem('user', JSON.stringify(dataSave))
+            }
+        } catch (error) {
+        }
+    }
+
+
+
     return (
         <View style={{
             flex: 1,
@@ -64,7 +85,16 @@ const Welcome = ({ navigation }: any) => {
                     borderStyle: 'solid',
                     marginTop: 16
                 }} >
-                    <TouchableOpacity onPress={() => { navigation.navigate('Level') }} style={{ width: '100%', flexDirection: 'row', justifyContent: 'center' }}>
+                    <TouchableOpacity onPress={() => { 
+                        Alert.alert('Success', 'You have successfully to recive 10 points',[
+                            {
+                                text: 'OK',
+                                onPress: async () => {
+                                    await addPoint()
+                                }
+                            }
+                        ])
+                     }} style={{ width: '100%', flexDirection: 'row', justifyContent: 'center' }}>
                         <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'center' }}>
                             <Text style={{
                                 fontSize: 25,
