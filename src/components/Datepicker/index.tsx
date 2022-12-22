@@ -78,9 +78,6 @@ const Datepicker = () => {
   years?.push(undefined, undefined);
   day?.push(undefined, undefined);
   const onFinish = () => {
-    console.log(day[sx.value / 50 + 2]);
-    console.log(month[sy.value / 50 + 2]);
-    console.log(years[sz.value / 50 + 2]);
   };
   return (
     <Box flex={1}>

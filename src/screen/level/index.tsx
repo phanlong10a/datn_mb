@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-community/async-storage'
 import { StackActions } from '@react-navigation/native'
 import React, { useState } from 'react'
 import { FlatList, Image, ImageBackground, Text, View } from 'react-native'
@@ -27,6 +28,7 @@ const db = SQLite.openDatabase({ name: 'rnsqlite', }, openCB, errorCB);
 export default ({ navigation }: any) => {
 
     const [listItem, setListItem] = useState<any[]>([]);
+    const [userData, setUserData] = useState<any>(null);
 
     const renderItem = (item: any) => {
         let source
@@ -56,44 +58,106 @@ export default ({ navigation }: any) => {
                 source = image1
                 break;
         }
+        const getTextLevel = () => {
+            const isComplete = (userData.currentIngameLevel) > (70 * item.index) && (userData.currentIngameLevel) < (70 * (item.index + 1))
+            if (isComplete) {
+                return userData.currentIngameLevel - 70 * item.index
+            } else {
+                return '70'
+            }
+        }
 
-        return <View>
-            <TouchableOpacity style={{
-                width: '100%',
-                marginVertical: 10,
-                height: 76,
-                backgroundColor: '#FFFFFF',
-                borderRadius: 18,
-                shadowColor: 'rgba(255, 255, 255, 0.58)',
-                shadowOffset: {
-                    width: 0,
-                    height: 2
-                },
-                flexDirection: 'row',
-                alignItems: 'center',
-                paddingHorizontal: 10,
-            }} activeOpacity={0.6} onPress={() => {
-                navigation.navigate('LevelDetail', {
-                    state: item
-                })
-            }}>
-                <Image source={source} style={{
-                    width: 60,
-                    height: 60,
-                    borderRadius: 30,
-                    marginRight: 10
-                }} />
-                <Text
-                    style={{
-                        fontSize: 25,
-                        fontWeight: '700',
-                        color: '#000'
+        return (
+            userData.currentIngameLevel > 70 * item.index ? <View>
+                <TouchableOpacity style={{
+                    width: '100%',
+                    marginVertical: 10,
+                    height: 76,
+                    backgroundColor: '#FFFFFF',
+                    borderRadius: 18,
+                    shadowColor: 'rgba(255, 255, 255, 0.58)',
+                    shadowOffset: {
+                        width: 0,
+                        height: 2
+                    },
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    paddingHorizontal: 10,
+                }} activeOpacity={0.6} onPress={() => {
+                    navigation.navigate('LevelDetail', {
+                        state: item,
+                        level: 'level ' + (item.index + 1),
+                        textLevel: getTextLevel()
+                    })
+                }}>
+                    <Image source={source} style={{
+                        width: 60,
+                        height: 60,
+                        borderRadius: 30,
+                        marginRight: 10
+                    }} />
+                    <Text
+                        style={{
+                            fontSize: 25,
+                            fontWeight: '700',
+                            color: '#000'
+                        }}>
+                        level {item.index + 1}
+                    </Text>
+                    <View style={{
+                        flexGrow: 1,
                     }}>
-                    level{item.index + 1}
-                </Text>
-            </TouchableOpacity>
-        </View>
-
+                        <Text style={{
+                            textAlign: 'right'
+                        }}>
+                            {getTextLevel()}/70
+                        </Text>
+                    </View>
+                </TouchableOpacity>
+            </View> : <View>
+                <TouchableOpacity style={{
+                    width: '100%',
+                    marginVertical: 10,
+                    height: 76,
+                    backgroundColor: '#FFFFFF',
+                    borderRadius: 18,
+                    shadowColor: 'rgba(255, 255, 255, 0.58)',
+                    shadowOffset: {
+                        width: 0,
+                        height: 2
+                    },
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    paddingHorizontal: 10,
+                }} activeOpacity={0.6}
+                >
+                    <Image source={require("../../../assets/image/lock-level.png")} style={{
+                        width: 60,
+                        height: 60,
+                        borderRadius: 30,
+                        marginRight: 10
+                    }} />
+                    <View>
+                        <Text
+                            style={{
+                                fontSize: 25,
+                                fontWeight: '700',
+                                color: '#000'
+                            }}>
+                            level {item.index + 1}
+                        </Text>
+                        <Text
+                            style={{
+                                fontSize: 18,
+                                fontWeight: '700',
+                                color: '#444444'
+                            }}>
+                            Pass level {item.index} to unlock
+                        </Text>
+                    </View>
+                </TouchableOpacity>
+            </View>
+        )
     }
 
     const [categories, setCategories] = useState<any[]>([]);
@@ -136,7 +200,9 @@ export default ({ navigation }: any) => {
                             let item = res.rows.item(i);
                             results.push(item)
                         }
-                        setCategories(results);
+                        setCategories(results.sort((a, b) => {
+                            return a.id - b.id
+                        }));
                     }
                 },
                 (error: { message: string; }) => {
@@ -145,6 +211,25 @@ export default ({ navigation }: any) => {
             );
         });
     };
+
+    const getUserData = async () => {
+        try {
+            const userData = await AsyncStorage.getItem('user')
+            if (userData !== null) {
+                setUserData(JSON.parse(userData))
+            }
+        } catch (error) {
+
+        }
+    }
+
+    React.useEffect(() => {
+        const func = async () => {
+            await getUserData()
+        }
+        func()
+    }, [])
+
     return <>
         <View style={{
             flex: 1,
@@ -182,8 +267,15 @@ export default ({ navigation }: any) => {
                     }}>
                         Choose Level
                     </Text>
-                    <Text>
-                        130
+                    <Text style={{
+                        fontFamily: 'LuckiestGuy-Regular',
+                        fontSize: 30,
+                        justifyContent: 'center',
+                        flexDirection: 'row',
+                        textAlign: 'center',
+                        color: 'yellow'
+                    }}>
+                        ${userData?.currentPoint}
                     </Text>
                 </View>
                 {listItem.length > 0 &&

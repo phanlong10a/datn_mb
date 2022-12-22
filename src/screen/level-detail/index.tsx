@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import { FlatList, Image, ImageBackground, Text, View } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { image } from '../../configs/ImageCollection'
+import AsyncStorage from '@react-native-community/async-storage'
 const image1 = require('../../../assets/www/pics_lg/1.png')
 const image2 = require('../../../assets/www/pics_lg/2.png')
 const image3 = require('../../../assets/www/pics_lg/3.png')
@@ -28,6 +29,7 @@ const db = SQLite.openDatabase({ name: 'rnsqlite', }, openCB, errorCB);
 const LevelDetail = ({ navigation, route }: any) => {
 
     const [listItem, setListItem] = useState<any[]>([]);
+    const [userData, setUserData] = useState<any>(null);
 
     const renderItem = (item: any) => {
 
@@ -43,6 +45,16 @@ const LevelDetail = ({ navigation, route }: any) => {
                 flex: 1 / 3
             }}
             activeOpacity={0.5}
+            onPress={() => {
+                if (userData?.currentIngameLevel - item.item.id >= 0) {
+                    navigation.navigate('Ingame', {
+                        data: item.item,
+                        textLevel: route.params.textLevel,
+                        level: route.params.level,
+                        currentParams: route.params
+                    })
+                }
+            }}
         >
             <View style={{
                 width: 100,
@@ -58,22 +70,46 @@ const LevelDetail = ({ navigation, route }: any) => {
                 alignItems: 'center',
                 paddingHorizontal: 10,
                 paddingVertical: 10,
-            }}>
-                {/* @ts-ignore */}
-                <Image source={image[item.item.id]} style={{
-                    width: '100%',
-                    height: '100%',
-                    borderRadius: 18,
-                    marginRight: 10
-                }} />
+            }}>{
+                    userData?.currentIngameLevel - item.item.id >= 0 ?
+                        // @ts-ignore 
+                        <Image source={image[item.item.id]} style={{
+                            width: '100%',
+                            height: '100%',
+                            borderRadius: 18,
+                            marginRight: 10
+                        }} /> : <Image source={require("../../../assets/image/lock-icon.png")} style={{
+                            width: '100%',
+                            height: '100%',
+                            borderRadius: 18,
+                            marginRight: 10
+                        }} />
+                }
+
             </View>
         </TouchableOpacity>
 
     }
 
-    const [categories, setCategories] = useState<any[]>([]);
+
+    const getUserData = async () => {
+        try {
+            const userData = await AsyncStorage.getItem('user')
+            if (userData !== null) {
+                setUserData(JSON.parse(userData))
+            }
+        } catch (error) {
+
+        }
+    }
 
 
+    React.useEffect(() => {
+        const func = async () => {
+            await getUserData()
+        }
+        func()
+    }, [route])
 
     return <>
         <View style={{
@@ -110,10 +146,17 @@ const LevelDetail = ({ navigation, route }: any) => {
                         textAlign: 'center',
                         color: '#570149'
                     }}>
-                        Choose Level
+                        {route.params.level}
                     </Text>
-                    <Text>
-                        130
+                    <Text style={{
+                        fontFamily: 'LuckiestGuy-Regular',
+                        fontSize: 30,
+                        justifyContent: 'center',
+                        flexDirection: 'row',
+                        textAlign: 'center',
+                        color: 'yellow'
+                    }}>
+                        ${userData?.currentPoint}
                     </Text>
                 </View>
                 <FlatList

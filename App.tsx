@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import "react-native-gesture-handler";
 import Routes from './src/route/index';
 let SQLite = require('react-native-sqlite-storage')
+import AsyncStorage from '@react-native-community/async-storage';
 function errorCB(err) {
 }
 
@@ -581,10 +582,28 @@ const App = () => {
     });
   };
 
+
+  const initUserData = async () => {
+    try {
+      const checkValue = await AsyncStorage.getItem('user')
+      if (!checkValue) {
+        const initValueUser = {
+          currentPoint: 100,
+          currentIngameLevel: 1
+        }
+        await AsyncStorage.setItem('user', JSON.stringify(initValueUser))
+      }
+    } catch (e) {
+    }
+  }
+
+
+
   React.useEffect(() => {
     const func = async () => {
       await createTables();
       await getCategories();
+      await initUserData();
     }
     func()
   }, []);
