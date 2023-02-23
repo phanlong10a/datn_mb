@@ -145,6 +145,8 @@ const Button: React.FC<ButtonProps> = ({
             type={textType ? textType : text}
             color={textColor ? textColor : "WHITE"}
             numberOfLines={1}
+            fontSize={16}
+            style={{ fontWeight: "500" }}
           >
             {label}
           </Typography>

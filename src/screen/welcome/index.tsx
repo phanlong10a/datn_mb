@@ -1,116 +1,122 @@
-import AsyncStorage from '@react-native-community/async-storage'
-import { StackActions } from '@react-navigation/native'
-import Box from '@src/components/Box'
-import React from 'react'
-import { Alert, Image, ImageBackground, SafeAreaView, Text, View } from 'react-native'
-import { TouchableOpacity } from 'react-native-gesture-handler'
-import LinearGradient from 'react-native-linear-gradient'
+/* eslint-disable react-native/no-inline-styles */
+import {useAuthenState} from '@src/atom/authen';
+import Button from '@src/components/Button';
+import TForm from '@src/components/TForm';
+import Input from '@src/components/TForm/Input';
+import {deviceWidth} from '@src/configs/theme/common';
+import {storage, StorageKey} from '@src/storage';
+import {useRequest} from 'ahooks';
+import {Field, useForm} from 'rc-field-form';
+import React from 'react';
+import {ImageBackground, Text, View} from 'react-native';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+import {onLogin} from './service';
 
-const Welcome = ({ navigation }: any) => {
+const Welcome = ({}: any) => {
+  const [form] = useForm();
+  const [authen, setAuthen] = useAuthenState();
 
+  const requesetLogin = useRequest(onLogin, {
+    manual: true,
+    onSuccess(data: any) {
+      storage.set(StorageKey.Authen, data.data.token);
+      setAuthen({
+        ...authen,
+        token: data.data.token,
+      });
+    },
+  });
 
-    const addPoint = async () => {
-        try {
-            const userData = await AsyncStorage.getItem('user')
-            if (userData !== null) {
-                const userParse = JSON.parse(userData)
-                const dataSave = {
-                    currentPoint: userParse.currentPoint + 10,
-                    currentIngameLevel: userParse.currentIngameLevel,
-                }
-                await AsyncStorage.setItem('user', JSON.stringify(dataSave))
-            }
-        } catch (error) {
-        }
-    }
-
-
-
-    return (
-        <View style={{
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
+  return (
+    <View
+      style={{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}>
+      <ImageBackground
+        source={require('../../../assets/image/medical-wallpaper.jpeg')}
+        resizeMode="cover"
+        style={{
+          flex: 1,
+          width: '100%',
+          justifyContent: 'center',
+          alignItems: 'center',
         }}>
-            <ImageBackground source={require("../../../assets/image/background-theme.png")} resizeMode="cover" style={{
-                flex: 1,
-                width: '100%',
-                justifyContent: 'center',
-                alignItems: 'center'
-            }} >
-
-                <Text style={{
-                    fontFamily: 'LuckiestGuy-Regular',
-                    fontSize: 30,
-                    justifyContent: 'center',
-                    flexDirection: 'row',
-                    textAlign: 'center',
-                    color: '#570149'
-                }}>
-                    Guess  The
-                    Movie & character
-                </Text>
-                <Image key={1} source={require('../../../assets/image/main-logo.png')} />
-
-                <LinearGradient colors={['rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, 0.45)']} style={{
-                    width: '70%',
-                    borderColor: '#FF4A4A',
-                    backgroundColor: '#FF4A4A',
-                    borderWidth: 2,
-                    paddingVertical: 8,
-                    borderRadius: 29,
-                    borderStyle: 'solid',
-                    marginTop: 40
-                }} >
-                    <TouchableOpacity onPress={() => { navigation.navigate('Level') }} style={{ width: '100%', flexDirection: 'row', justifyContent: 'center' }}>
-                        <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'center' }}>
-                            <Text style={{
-                                fontSize: 25,
-                                color: 'white',
-                                textAlign: 'center',
-                                fontWeight: '700'
-                            }}>
-                                Play
-                            </Text>
-                        </View>
-                    </TouchableOpacity>
-                </LinearGradient>
-                <LinearGradient colors={['rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, 0.45)']} style={{
-                    width: '70%',
-                    borderColor: '#FFB017',
-                    backgroundColor: '#FFB017',
-                    borderWidth: 2,
-                    paddingVertical: 8,
-                    borderRadius: 29,
-                    borderStyle: 'solid',
-                    marginTop: 16
-                }} >
-                    <TouchableOpacity onPress={() => { 
-                        Alert.alert('Success', 'You have successfully to recive 10 points',[
-                            {
-                                text: 'OK',
-                                onPress: async () => {
-                                    await addPoint()
-                                }
-                            }
-                        ])
-                     }} style={{ width: '100%', flexDirection: 'row', justifyContent: 'center' }}>
-                        <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'center' }}>
-                            <Text style={{
-                                fontSize: 25,
-                                color: 'white',
-                                textAlign: 'center',
-                                fontWeight: '700'
-                            }}>
-                                Free Coins
-                            </Text>
-                        </View>
-                    </TouchableOpacity>
-
-                </LinearGradient>
-            </ImageBackground>
-
-        </View>
-    )
-}
-export default Welcome
+        <Text
+          style={{
+            fontSize: 40,
+            color: 'white',
+            textAlign: 'center',
+            marginBottom: 24,
+          }}>
+          Đăng nhập
+        </Text>
+        <TForm
+          form={form}
+          onFinish={value => {
+            requesetLogin.run(value);
+          }}>
+          <Field name="email">
+            {({onChange, value}, meta) => {
+              return (
+                <Input
+                  onChange={onChange}
+                  meta={meta}
+                  value={value}
+                  style={{
+                    backgroundColor: '#fff',
+                    width: deviceWidth - 60,
+                  }}
+                  inputStyle={{
+                    color: '#000',
+                  }}
+                  placeholder={'Tên đăng nhập'}
+                />
+              );
+            }}
+          </Field>
+          <Field name="password">
+            {({onChange, value}, meta) => {
+              return (
+                <Input
+                  onChange={onChange}
+                  meta={meta}
+                  type={'password'}
+                  value={value}
+                  style={{
+                    backgroundColor: '#fff',
+                    width: deviceWidth - 60,
+                  }}
+                  inputStyle={{
+                    color: '#000',
+                  }}
+                  placeholder={'Mật khẩu'}
+                />
+              );
+            }}
+          </Field>
+        </TForm>
+        <TouchableOpacity
+          activeOpacity={0.5}
+          onPress={() => {
+            form.submit();
+          }}>
+          <Button
+            style={{
+              backgroundColor: '#fff',
+              width: deviceWidth - 160,
+              height: 40,
+              borderRadius: 20,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+            // @ts-ignore
+            textColor={'#000'}
+            label={'Đăng nhập'}></Button>
+        </TouchableOpacity>
+      </ImageBackground>
+    </View>
+  );
+};
+export default Welcome;
