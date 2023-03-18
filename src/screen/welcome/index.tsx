@@ -1,16 +1,16 @@
 /* eslint-disable react-native/no-inline-styles */
-import {useAuthenState} from '@src/atom/authen';
+import { useAuthenState } from '@src/atom/authen';
 import Button from '@src/components/Button';
 import TForm from '@src/components/TForm';
 import Input from '@src/components/TForm/Input';
-import {deviceWidth} from '@src/configs/theme/common';
-import {storage, StorageKey} from '@src/storage';
-import {useRequest} from 'ahooks';
-import {Field, useForm} from 'rc-field-form';
+import { deviceWidth } from '@src/configs/theme/common';
+import { storage, StorageKey } from '@src/storage';
+import { useRequest } from 'ahooks';
+import { Field, useForm } from 'rc-field-form';
 import React from 'react';
-import {ImageBackground, Text, View} from 'react-native';
-import {TouchableOpacity} from 'react-native-gesture-handler';
-import {onLogin} from './service';
+import { ImageBackground, Text, View } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { onLogin } from './service';
 
 const Welcome = ({}: any) => {
   const [form] = useForm();

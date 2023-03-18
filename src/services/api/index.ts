@@ -12,7 +12,6 @@ export const REQUEST_METHOD = {
 export async function requestApi(method, url, bodyGo, headers, isUploadFile) {
   const token = await storage.getString(StorageKey.Authen);
   let requestHeaders = {...headers, Authorization: 'Bearer ' + token};
-  console.log('🚀 ~ file: index.ts:14 ~ requestApi ~ token', token);
   let body = bodyGo;
   if (bodyGo === null || bodyGo === undefined) {
     body = {};

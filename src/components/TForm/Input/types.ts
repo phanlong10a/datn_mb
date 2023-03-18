@@ -16,7 +16,7 @@ export interface InputProps extends Omit<TextInputProps, "onChange"> {
   suffix?: ReactNode;
   prefix?: ReactNode;
   containerOnLayout?: any;
-  type?: "password";
+  type?: any;
   value?: any;
   dontShowErrorMessage?: boolean;
   loading?: boolean;

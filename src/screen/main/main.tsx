@@ -28,7 +28,7 @@ const Main = ({navigation}: any) => {
         alignItems: 'center',
       }}>
       <ImageBackground
-        source={require('../../../assets/image/background-theme.png')}
+        source={require('./main-logo.png')}
         resizeMode="cover"
         style={{
           flex: 1,

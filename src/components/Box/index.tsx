@@ -44,10 +44,10 @@ const Box: React.FC<BoxProps> = ({
       .map((key: any) => {
         if (['padding', 'margin', 'borderRadius'].includes(key)) {
           const values = theme.utils.styles.normalizeOptions(styleObject[key]);
-          return theme.utils.styles[key](values);
+          return theme.utils?.styles[key](values);
         }
         if (styleObject[key]) {
-          return theme.utils.styles[key](styleObject[key]);
+          return theme.utils?.styles[key](styleObject[key]);
         }
       })
       .filter(e => e);

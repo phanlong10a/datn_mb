@@ -1,9 +1,10 @@
 import React from 'react';
-import {Text} from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import {Text, Touchable, TouchableOpacity, Dimensions} from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import {View} from 'react-native';
 type Props = {
   children: any;
+  navigation: any;
 };
 
 const WrapperDrawer = (props: Props) => {
@@ -12,10 +13,22 @@ const WrapperDrawer = (props: Props) => {
       style={{
         width: '100%',
         height: '100%',
+        position: 'relative',
       }}>
-      <Icon name="menu" size={30} color="#900" />
-      <Text>alo123123</Text>
-      {props.children}
+      <TouchableOpacity
+        style={{
+          position: 'absolute',
+        }}
+        activeOpacity={0.7}
+        onPress={() =>{
+            props.navigation.toggleDrawer();
+        }}
+        >
+        <Icon name="menu" size={30} color="#900" />
+      </TouchableOpacity>
+      <View style={{width: '100%', height: Dimensions.get('window').height - 30}}>
+        {props.children}
+      </View>
     </View>
   );
 };

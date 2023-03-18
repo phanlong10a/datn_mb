@@ -2,8 +2,8 @@ import Box from '@src/components/Box';
 import Icon from '@src/components/Icon';
 import Typography from '@src/components/Typography';
 import theme from '@src/configs/theme';
-import React, { useMemo } from 'react';
-import { Image, Modal, StyleSheet, ViewStyle } from 'react-native';
+import React, {useMemo} from 'react';
+import {Image, Modal, StyleSheet, ViewStyle} from 'react-native';
 import SelectItem from './SelectItem';
 import {
   borderError,
@@ -17,17 +17,17 @@ import {
   PanGestureHandlerGestureEvent,
   ScrollView,
 } from 'react-native-gesture-handler';
-import { bottomSheet, bottomSheetHeader } from './styles';
+import {bottomSheet, bottomSheetHeader} from './styles';
 import Animated, {
   useAnimatedGestureHandler,
   useAnimatedStyle,
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
-import { SelectProps } from './types';
-import { deviceHeight } from '@src/configs/theme/common';
+import {SelectProps} from './types';
+import {deviceHeight} from '@src/configs/theme/common';
 import COLORS from '@src/configs/theme/colors';
-import { IconSvg } from '@src/components/IconSvg';
+import {IconSvg} from '@src/components/IconSvg';
 
 interface SelectState {
   visible: boolean;
@@ -71,7 +71,7 @@ const Select: React.FC<SelectProps> = ({
     return style;
   }, [margin, padding]);
 
-  const [state, setState] = React.useState<SelectState>({ visible: false });
+  const [state, setState] = React.useState<SelectState>({visible: false});
 
   const SPRING_CONFIG = {
     overshootClamping: true,
@@ -121,8 +121,7 @@ const Select: React.FC<SelectProps> = ({
             <Typography
               margin={[0, 0, 5, 0]}
               type="Caption - Regular"
-              color="NEUTRAL_400"
-            >
+              color="NEUTRAL_400">
               {label}
             </Typography>
           )}
@@ -141,55 +140,20 @@ const Select: React.FC<SelectProps> = ({
             meta && meta.errors && meta.errors[0] && borderError,
           ]}
           activePress
-          onPress={() => setState({ visible: true })}
-        >
-          {type === 'nothing' ? null : type !== 'imageSelf' ? (
-            <Icon name="image_upload" size={25} color={COLORS.BLUE_GREY_700} />
-          ) : (
-            <Box align="center">
-              <IconSvg size={100} name="selfie" />
-              <Box margin={[15, 0, 0, 0]}>
-                <Icon name="camera_plus" size={40} color={COLORS.NEUTRAL_500} />
-              </Box>
-            </Box>
-          )}
-
-          {props.value && !camera ? (
+          onPress={() => setState({visible: true})}>
+          {props.value ? (
             <>
-              {type ? (
-                <Image source={{ uri: props.value.uri }} style={imageStyle} />
-              ) : (
-                <Typography type="Body2 - Regular" color="NEUTRAL_400">
-                  {props.value.label || props.value}
-                </Typography>
-              )}
+              <Typography type="Body2 - Regular" color="NEUTRAL_400">
+                {options.find(e => e.value === props.value)?.label}
+              </Typography>
             </>
           ) : (
             <>
-              {!type && (
-                <Typography type="Body1 - Regular" color={'NEUTRAL_400'}>
-                  {placeholder}
-                </Typography>
-              )}
-              {type && camera && (
-                <>
-                  <Image
-                    source={{
-                      uri: `file://${camera}`,
-                    }}
-                    // resizeMode="stretch"
-                    style={imageStyle}
-                  />
-                </>
-              )}
-              {type !== 'imageSelf' && !camera && (
-                <Typography type="Body2 - Medium" color="NEUTRAL_400">
-                  {placeholder}
-                </Typography>
-              )}
+              <Typography type="Body1 - Regular" color={'NEUTRAL_400'}>
+                {placeholder}
+              </Typography>
             </>
           )}
-          {suficon && suficon}
         </Box>
 
         {meta?.errors && (
@@ -197,8 +161,7 @@ const Select: React.FC<SelectProps> = ({
             <Typography
               margin={[0, 0, 5, 0]}
               type="Caption - Regular"
-              color="RED_500"
-            >
+              color="RED_500">
               {meta?.errors}
             </Typography>
           </Box>
@@ -208,7 +171,7 @@ const Select: React.FC<SelectProps> = ({
           <Box
             style={defaultContainer}
             activePress
-            onPress={() => setState({ visible: false })}
+            onPress={() => setState({visible: false})}
           />
           <PanGestureHandler onGestureEvent={onGestureEvent}>
             <Animated.View style={[bottomSheet, sheetStyle]}>

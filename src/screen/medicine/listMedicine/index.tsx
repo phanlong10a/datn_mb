@@ -7,11 +7,11 @@ import {FlatList, RefreshControl} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import UserItem from './component/user-item';
 import {useIsFocused} from '@react-navigation/native';
-import {getListUsers} from './services';
+import {getListMedicine} from './services';
 import Input from '@src/components/TForm/Input';
 import {deviceWidth} from '@src/configs/theme/common';
 
-const ListStaff = ({navigation, route}: any) => {
+const ListMedicine = ({navigation, route}: any) => {
   const isFocused = useIsFocused();
 
   const [authen, setAuthen] = useAuthenState();
@@ -19,7 +19,7 @@ const ListStaff = ({navigation, route}: any) => {
   const [searchText, setSearchText] = React.useState<string>('');
   const [showSearch, setShowSearch] = React.useState<boolean>(false);
 
-  const getDataRequest = useRequest(getListUsers, {
+  const getDataRequest = useRequest(getListMedicine, {
     manual: true,
     onSuccess(res, params) {
       if (Array.isArray(res?.data?.data)) setListUser(res?.data?.data);
@@ -86,7 +86,7 @@ const ListStaff = ({navigation, route}: any) => {
           buttonColor="#1abc9c"
           title="Thêm mới"
           onPress={() => {
-            navigation.navigate('addUser');
+            navigation.navigate('addMedicine');
           }}>
           <Icon name="add" style={styles.actionButtonIcon} />
         </ActionButton.Item>
@@ -101,4 +101,4 @@ const styles = StyleSheet.create({
     color: 'white',
   },
 });
-export default ListStaff;
+export default ListMedicine;

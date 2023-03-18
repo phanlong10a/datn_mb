@@ -121,7 +121,7 @@ const Input: React.FC<InputProps> = ({
                 <TextInput
                   ref={textInputReference}
                   allowFontScaling={false}
-                  numberOfLines={1}
+                  numberOfLines={props.numberOfLines}
                   underlineColorAndroid="transparent"
                   placeholderTextColor={COLORS.NEUTRAL_400}
                   autoComplete={'off'}
