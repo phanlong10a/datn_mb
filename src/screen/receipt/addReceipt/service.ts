@@ -1,10 +1,10 @@
 import {DEV_BASE_URL} from '@src/request/request';
 import {requestApi, REQUEST_METHOD} from '@src/services/api';
 
-export const createApi = body => {
+export const createApi = (body, id) => {
   return requestApi(
     REQUEST_METHOD.POST,
-    DEV_BASE_URL + '/receipt/create',
+    DEV_BASE_URL + '/medicine',
     {
       ...body,
     },
@@ -15,7 +15,7 @@ export const createApi = body => {
 export const updateApi = (body, id) => {
   return requestApi(
     REQUEST_METHOD.PUT,
-    DEV_BASE_URL + '/patient/' + id,
+    DEV_BASE_URL + '/medicine/' + id,
     {
       ...body,
     },
@@ -27,6 +27,16 @@ export const deleteApi = id => {
   return requestApi(
     REQUEST_METHOD.DELETE,
     DEV_BASE_URL + '/medicine/' + id,
+    null,
+    {},
+    false,
+  );
+};
+export const paid = id => {
+  console.log("🚀 ~ file: service.ts:36 ~ paid ~ id:", id)
+  return requestApi(
+    REQUEST_METHOD.POST,
+    DEV_BASE_URL + '/receipt/confirm/' + id,
     null,
     {},
     false,

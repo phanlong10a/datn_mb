@@ -1,17 +1,69 @@
-import {createDrawerNavigator} from '@react-navigation/drawer';
+import {
+  createDrawerNavigator,
+  DrawerContentScrollView,
+  DrawerItem,
+  DrawerItemList,
+} from '@react-navigation/drawer';
 import Welcome from '@src/screen/welcome';
 import UserNavigation from './user';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import MedicineNavigation from './medicine';
 import PatientNavigation from './patient';
+import ReceiptNavigation from './receipt';
+import Button from '@src/components/Button';
+import { storage, StorageKey } from '@src/storage';
+import { useAuthenState } from '@src/atom/authen';
 const Drawer = createDrawerNavigator();
 
 const MainLayout = (props: any) => {
+  const [authen, setAuthen] = useAuthenState();
   return (
-    <Drawer.Navigator>
+    <Drawer.Navigator
+      initialRouteName="Home"
+      drawerContent={props => {
+        return (
+          <DrawerContentScrollView {...props}>
+            <View
+              style={{
+                justifyContent: 'space-between',
+              }}>
+              <DrawerItemList {...props} />
+              <DrawerItem
+                onPress={() => {
+                  storage.set(StorageKey.Authen, '');
+                  setAuthen({
+                    ...authen,
+                    token: null,
+                  });
+                }}
+                style={{
+                  marginTop: 'auto',
+                  flexGrow: 1,
+                }}
+                label={() => (
+                  <View style={{flexDirection: 'row'}}>
+                    <Icon
+                      name="power-settings-new"
+                      style={styles.actionButtonIcon}
+                      color="red"
+                    />
+                    <Text
+                      style={{
+                        marginLeft: 30,
+                        color: 'red',
+                      }}>
+                      Logout
+                    </Text>
+                  </View>
+                )}
+              />
+            </View>
+          </DrawerContentScrollView>
+        );
+      }}>
       <Drawer.Screen
-        name="user" 
+        name="user"
         component={UserNavigation}
         options={{
           title: 'Nhân viên',
@@ -31,16 +83,6 @@ const MainLayout = (props: any) => {
         }}
       />
       <Drawer.Screen
-        name="prescription"
-        component={Welcome}
-        options={{
-          title: 'Danh mục thuốc',
-          drawerIcon: () => (
-            <Icon name="medical-services" style={styles.actionButtonIcon} />
-          ),
-        }}
-      />
-      <Drawer.Screen
         name="medicine"
         component={MedicineNavigation}
         options={{
@@ -52,7 +94,7 @@ const MainLayout = (props: any) => {
       />
       <Drawer.Screen
         name="receipt"
-        component={Welcome}
+        component={ReceiptNavigation}
         options={{
           title: 'Hoá đơn',
           drawerIcon: () => (
@@ -70,6 +112,16 @@ const MainLayout = (props: any) => {
           ),
         }}
       />
+      <Drawer.Screen
+        name="my-profile"
+        component={Welcome}
+        options={{
+          title: 'Thông tin cá nhân',
+          drawerIcon: () => (
+            <Icon name="person-outline" style={styles.actionButtonIcon} />
+          ),
+        }}
+      />
     </Drawer.Navigator>
   );
 };
@@ -78,6 +130,7 @@ const styles = StyleSheet.create({
   actionButtonIcon: {
     fontSize: 20,
     height: 22,
+    width: 20,
     color: 'black',
     marginRight: -20,
   },

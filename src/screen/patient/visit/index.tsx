@@ -87,22 +87,44 @@ const Visit = ({ navigation, route }: any) => {
     setAvtUrl(params.item.item.avatar);
   }, [params]);
 
-  const deleteAlert = () =>
-    Alert.alert('Bạn muốn xoá vị thuốc này chứ', 'Bấm có để xác nhận', [
-      {
-        text: 'Không',
-        style: 'cancel',
-      },
-      {
-        text: 'Có',
-        onPress: () => deleteUserRequest.run(params?.item?.item?.id),
-      },
-    ]);
-
   const removeItemFromList = (index) => {
     const inputFieldsClone = [...inputFields];
     inputFieldsClone.splice(index, 1);
     setAddMedicine(inputFieldsClone)
+  }
+
+
+  const onChangeMedicine = (value, index) => {
+    const inputFieldsClone = [...inputFields];
+    inputFieldsClone[index] = {
+      ...inputFieldsClone[index],
+      medicine: value
+    }
+    setAddMedicine(inputFieldsClone)
+  }
+
+  const onChangeValueMedicine = (value, index) => {
+    const inputFieldsClone = [...inputFields];
+    inputFieldsClone[index] = {
+      ...inputFieldsClone[index],
+      amount_dosage: value
+    }
+    setAddMedicine(inputFieldsClone)
+  }
+
+  const onSubmitValue = (value) => {
+    const patientId = params?.item?.item?.id;
+    const valueSubmit = {
+      ...value,
+      patientId,
+      medicine: inputFields.map((item) => {
+        return {
+          ...item,
+          amount_dosage: +item.amount_dosage
+        }
+      })
+    }
+    createRequest.run(valueSubmit)
   }
 
   return (
@@ -162,23 +184,7 @@ const Visit = ({ navigation, route }: any) => {
         <TForm
           form={form}
           onFinish={value => {
-            if (!params?.item) {
-              createRequest.run(
-                {
-                  ...value,
-                  avatar: avtUrl,
-                },
-                null,
-              );
-              return;
-            }
-            updateRequest.run(
-              {
-                ...value,
-                avatar: avtUrl,
-              },
-              params?.item?.item?.id,
-            );
+            onSubmitValue(value)
           }}>
           <Typography
             fontSize={15}
@@ -256,7 +262,7 @@ const Visit = ({ navigation, route }: any) => {
           >
             Thang thuốc kê đơn
           </Typography>
-          <Field name="measure_fee">
+          <Field name="total_count">
             {({ onChange, value }, meta) => {
               return (
                 <Input
@@ -276,7 +282,7 @@ const Visit = ({ navigation, route }: any) => {
               );
             }}
           </Field>
-          <Field name="dcm_thang_thanh">
+          <Field>
             {({ onChange, value }, _meta) => {
               return inputFields.map((_item, _index) => {
                 return <View style={{
@@ -285,20 +291,26 @@ const Visit = ({ navigation, route }: any) => {
                   alignItems: 'center'
                 }}>
                   <Select
-                    placeholder={'Nguyên liệu từ'}
+                    placeholder={'Chọn thuốc'}
                     style={{
                       backgroundColor: '#fff',
                       width: deviceWidth - 20 - deviceWidth / 2,
-                      marginRight: 30
+                      marginRight: 30,
+                      borderRadius: 16,
+                      height: 50
                     }}
                     options={listMedicine}
-                    onChange={onChange}
+                    onChange={(value) => {
+                      onChangeMedicine(value, _index)
+                    }}
                     // imageApi={uploadImage}
-                    value={value}
+                    value={_item.medicine}
                     preicon={false}
                   />
                   <Input
-                    onChange={onChange}
+                    onChange={(value) => {
+                      onChangeValueMedicine(value, _index)
+                    }}
                     style={{
                       backgroundColor: '#fff',
                       width: deviceWidth - 110 - deviceWidth / 2,
@@ -306,6 +318,7 @@ const Visit = ({ navigation, route }: any) => {
                     inputStyle={{
                       color: '#000',
                     }}
+                    value={_item.amount_dosage}
                     placeholder={''}
                   />
                   <TouchableOpacity style={{

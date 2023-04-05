@@ -5,7 +5,6 @@ import {Dimensions, Image, StyleSheet, Text, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 
 const UserItem = (item: any) => {
-  console.log('🚀 ~ file: user-item.tsx:8 ~ UserItem ~ item:', item);
   const [authen, setAuthen] = useAuthenState();
   return (
     <View

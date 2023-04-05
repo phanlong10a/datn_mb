@@ -1,8 +1,8 @@
-import {useAuthenState} from '@src/atom/authen';
+import { useAuthenState } from '@src/atom/authen';
 import COLORS from '@src/configs/theme/colors';
 import React from 'react';
-import {Dimensions, Image, StyleSheet, Text, View} from 'react-native';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import { Dimensions, Image, StyleSheet, Text, View } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const UserItem = (item: any) => {
   const [authen, setAuthen] = useAuthenState();
@@ -34,32 +34,17 @@ const UserItem = (item: any) => {
         }}
         activeOpacity={0.8}
         onPress={() => {
-          item?.navigation?.navigate('addMedicine', {
+          item?.navigation?.navigate('addReceipt', {
             item,
           });
         }}>
         <View>
-          <Image
-            style={{
-              width: 70,
-              height: 70,
-              borderRadius: 70,
-              marginRight: 10,
-            }}
-            source={{
-              uri: item?.item?.avatar
-                ? 'http://' + item.item.avatar
-                : 'https://reactnative.dev/img/tiny_logo.png',
-            }}
-          />
-        </View>
-        <View>
-          <Text style={style.textHead}>{item?.item?.name}</Text>
-          <Text style={style.text}>
-            {item?.item?.price_per_unit + 'đ/' + item?.item?.measure_unit}
+          <Text style={style.textHead}>BN:{item?.item?.patient?.fullName}</Text>
+          <Text style={style.text}>Tổng chi phí:
+            {item?.item?.totalFee + 'đ'}
           </Text>
           <Text style={style.text} numberOfLines={1} ellipsizeMode={'tail'}>
-            {item?.item?.description}
+            {item?.item?.paidStatus ? "Đã thanh toán" : "Chưa thanh toán"}
           </Text>
         </View>
       </TouchableOpacity>

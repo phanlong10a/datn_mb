@@ -174,7 +174,6 @@ const AddMedicine = ({navigation, route}: any) => {
         <TForm
           form={form}
           onFinish={value => {
-            console.log('onFinish={value => {', value);
             if (!params?.item) {
               createRequest.run(
                 {

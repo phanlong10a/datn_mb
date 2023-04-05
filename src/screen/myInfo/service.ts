@@ -1,10 +1,19 @@
 import {DEV_BASE_URL} from '@src/request/request';
 import {requestApi, REQUEST_METHOD} from '@src/services/api';
 
-export const createApi = body => {
+export const createUser = () => {
+  return requestApi(
+    REQUEST_METHOD.GET,
+    DEV_BASE_URL + '/api/user/profile',
+    null,
+    {},
+    false,
+  );
+};
+export const updateUser = (body, id) => {
   return requestApi(
     REQUEST_METHOD.POST,
-    DEV_BASE_URL + '/receipt/create',
+    DEV_BASE_URL + '/api/admin/user/' + id,
     {
       ...body,
     },
@@ -12,21 +21,10 @@ export const createApi = body => {
     false,
   );
 };
-export const updateApi = (body, id) => {
-  return requestApi(
-    REQUEST_METHOD.PUT,
-    DEV_BASE_URL + '/patient/' + id,
-    {
-      ...body,
-    },
-    {},
-    false,
-  );
-};
-export const deleteApi = id => {
+export const deleteUser = id => {
   return requestApi(
     REQUEST_METHOD.DELETE,
-    DEV_BASE_URL + '/medicine/' + id,
+    DEV_BASE_URL + '/api/admin/user/' + id,
     null,
     {},
     false,
