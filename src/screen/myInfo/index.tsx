@@ -18,7 +18,7 @@ import {createUser, deleteUser, updateUser, upload_avatar} from './service';
 const MyInfo = ({navigation, route}: any) => {
   const params = route.params;
   const [imageError, setImageError] = useState();
-  const [currentUser, setCurrentUser] = useState()
+  const [currentUser, setCurrentUser] = useState();
   const [avtUrl, setAvtUrl] = React.useState(null);
   const [form] = useForm();
 
@@ -56,8 +56,9 @@ const MyInfo = ({navigation, route}: any) => {
   const createUserRequest = useRequest(createUser, {
     manual: true,
     onSuccess(data, params) {
-      console.log("🚀 ~ file: index.tsx:61 ~ onSuccess ~ data.data:", data.data)
-      setCurrentUser(data.data)
+      setCurrentUser(data.data?.data);
+      form.setFieldsValue({...data.data?.data});
+      setAvtUrl(data.data?.data.avatar);
     },
   });
   const updateUserRequest = useRequest(updateUser, {
@@ -84,11 +85,6 @@ const MyInfo = ({navigation, route}: any) => {
 
   React.useEffect(() => {
     createUserRequest.run();
-    if (!params?.item) return;
-    form.setFieldsValue({
-      ...params.item.item,
-    });
-    setAvtUrl(params.item.item.avatar);
   }, [params]);
 
   const deleteAlert = () =>
@@ -144,26 +140,34 @@ const MyInfo = ({navigation, route}: any) => {
         )}
 
         {/* <Box
-          circle={30}
-          align="center"
-          justify="center"
-          background="NEUTRAL_700"
-          style={styles.edit}>
-          <IconSvg name="edit" size={20} />
-        </Box> */}
+        circle={30}
+        align="center"
+        justify="center"
+        background="NEUTRAL_700"
+        style={styles.edit}>
+        <IconSvg name="edit" size={20} />
+      </Box> */}
       </Box>
       <TForm
         form={form}
         onFinish={value => {
-          updateUserRequest.run(
-            {
-              ...value,
-              avatar: avtUrl,
-            },
-            params?.item?.item?.id,
-          );
+          updateUserRequest.run({
+            ...value,
+            avatar: avtUrl,
+          });
         }}>
-        <Field name="email">
+        <Field
+          name="email"
+          rules={[
+            {
+              required: true,
+              message: 'Không được để trống',
+            },
+            {
+              type: 'email',
+              message: 'Nhập Email hợp lệ',
+            },
+          ]}>
           {({onChange, value}, meta) => {
             return (
               <Input
@@ -183,7 +187,18 @@ const MyInfo = ({navigation, route}: any) => {
             );
           }}
         </Field>
-        <Field name="phone">
+        <Field
+          name="phone"
+          rules={[
+            {
+              required: true,
+              message: 'Không được để trống',
+            },
+            {
+              pattern: /[0-9]/,
+              message: 'Chỉ nhập số',
+            },
+          ]}>
           {({onChange, value}, meta) => {
             return (
               <Input
@@ -202,7 +217,14 @@ const MyInfo = ({navigation, route}: any) => {
             );
           }}
         </Field>
-        <Field name="fullName">
+        <Field
+          name="fullName"
+          rules={[
+            {
+              required: true,
+              message: 'Không được để trống',
+            },
+          ]}>
           {({onChange, value}, meta) => {
             return (
               <Input
@@ -221,7 +243,19 @@ const MyInfo = ({navigation, route}: any) => {
             );
           }}
         </Field>
-        <Field name="dateOfBirth">
+        <Field
+          name="dateOfBirth"
+          rules={[
+            {
+              required: true,
+              message: 'Không được để trống',
+            },
+            {
+              pattern:
+                /^((19|2[0-9])[0-9]{2})-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/,
+              message: 'Nhập ngày hợp lệ dạng YYYY-MM-DD',
+            },
+          ]}>
           {({onChange, value}, meta) => {
             return (
               <Input
@@ -240,7 +274,18 @@ const MyInfo = ({navigation, route}: any) => {
             );
           }}
         </Field>
-        <Field name="cccd">
+        <Field
+          name="cccd"
+          rules={[
+            {
+              required: true,
+              message: 'Không được để trống',
+            },
+            {
+              pattern: /[0-9]/,
+              message: 'Chỉ nhập số',
+            },
+          ]}>
           {({onChange, value}, meta) => {
             return (
               <Input
@@ -277,10 +322,6 @@ const MyInfo = ({navigation, route}: any) => {
           // @ts-ignore
           label={'Cập nhật thông tin'}></Button>
       </TouchableOpacity>
-      <View
-        style={{
-          marginTop: 24,
-        }}></View>
     </ScrollView>
   );
 };

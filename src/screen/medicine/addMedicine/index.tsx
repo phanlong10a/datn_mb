@@ -197,7 +197,14 @@ const AddMedicine = ({navigation, route}: any) => {
           style={{
             overflow: 'scroll',
           }}>
-          <Field name="name">
+          <Field
+            name="name"
+            rules={[
+              {
+                required: true,
+                message: 'Không được để trống',
+              },
+            ]}>
             {({onChange, value}, meta) => {
               return (
                 <Input

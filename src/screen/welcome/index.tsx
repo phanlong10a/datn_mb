@@ -1,16 +1,16 @@
 /* eslint-disable react-native/no-inline-styles */
-import { useAuthenState } from '@src/atom/authen';
+import {useAuthenState} from '@src/atom/authen';
 import Button from '@src/components/Button';
 import TForm from '@src/components/TForm';
 import Input from '@src/components/TForm/Input';
-import { deviceWidth } from '@src/configs/theme/common';
-import { storage, StorageKey } from '@src/storage';
-import { useRequest } from 'ahooks';
-import { Field, useForm } from 'rc-field-form';
+import {deviceWidth} from '@src/configs/theme/common';
+import {storage, StorageKey} from '@src/storage';
+import {useRequest} from 'ahooks';
+import {Field, useForm} from 'rc-field-form';
 import React from 'react';
-import { ImageBackground, Text, View } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import { onLogin } from './service';
+import {ImageBackground, Text, View} from 'react-native';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+import {onLogin} from './service';
 
 const Welcome = ({}: any) => {
   const [form] = useForm();
@@ -19,10 +19,12 @@ const Welcome = ({}: any) => {
   const requesetLogin = useRequest(onLogin, {
     manual: true,
     onSuccess(data: any) {
+      console.log('🚀 ~ file: index.tsx:22 ~ onSuccess ~ data:', data.data);
       storage.set(StorageKey.Authen, data.data.token);
       setAuthen({
         ...authen,
         token: data.data.token,
+        isAdmin: data.data.isAdmin,
       });
     },
   });
@@ -35,7 +37,7 @@ const Welcome = ({}: any) => {
         alignItems: 'center',
       }}>
       <ImageBackground
-        source={require('../../../assets/image/medical-wallpaper.jpeg')}
+        source={require('../../../assets/image/medical-wallpaper.jpg')}
         resizeMode="cover"
         style={{
           flex: 1,
@@ -46,7 +48,7 @@ const Welcome = ({}: any) => {
         <Text
           style={{
             fontSize: 40,
-            color: 'white',
+            color: 'black',
             textAlign: 'center',
             marginBottom: 24,
           }}>

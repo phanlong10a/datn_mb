@@ -14,6 +14,8 @@ import ReceiptNavigation from './receipt';
 import Button from '@src/components/Button';
 import { storage, StorageKey } from '@src/storage';
 import { useAuthenState } from '@src/atom/authen';
+import MyInfo from '@src/screen/myInfo';
+import ListRevenue from '@src/screen/revenue/listRevenue';
 const Drawer = createDrawerNavigator();
 
 const MainLayout = (props: any) => {
@@ -104,7 +106,7 @@ const MainLayout = (props: any) => {
       />
       <Drawer.Screen
         name="payment-history"
-        component={Welcome}
+        component={ListRevenue}
         options={{
           title: 'Lịch sử giao dịch',
           drawerIcon: () => (
@@ -114,7 +116,7 @@ const MainLayout = (props: any) => {
       />
       <Drawer.Screen
         name="my-profile"
-        component={Welcome}
+        component={MyInfo}
         options={{
           title: 'Thông tin cá nhân',
           drawerIcon: () => (

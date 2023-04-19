@@ -82,14 +82,16 @@ const ListMedicine = ({navigation, route}: any) => {
           onPress={() => setShowSearch(true)}>
           <Icon name="find-in-page" style={styles.actionButtonIcon} />
         </ActionButton.Item>
-        <ActionButton.Item
-          buttonColor="#1abc9c"
-          title="Thêm mới"
-          onPress={() => {
-            navigation.navigate('addMedicine');
-          }}>
-          <Icon name="add" style={styles.actionButtonIcon} />
-        </ActionButton.Item>
+        {authen.isAdmin && (
+          <ActionButton.Item
+            buttonColor="#1abc9c"
+            title="Thêm mới"
+            onPress={() => {
+              navigation.navigate('addMedicine');
+            }}>
+            <Icon name="add" style={styles.actionButtonIcon} />
+          </ActionButton.Item>
+        )}
       </ActionButton>
     </ScrollView>
   );

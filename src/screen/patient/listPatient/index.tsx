@@ -15,6 +15,7 @@ const ListPatient = ({navigation, route}: any) => {
   const isFocused = useIsFocused();
 
   const [authen, setAuthen] = useAuthenState();
+  console.log('🚀 ~ file: index.tsx:18 ~ ListPatient ~ authen:', authen);
   const [listUser, setListUser] = React.useState<any>([]);
   const [searchText, setSearchText] = React.useState<string>('');
   const [showSearch, setShowSearch] = React.useState<boolean>(false);
@@ -82,14 +83,16 @@ const ListPatient = ({navigation, route}: any) => {
           onPress={() => setShowSearch(true)}>
           <Icon name="find-in-page" style={styles.actionButtonIcon} />
         </ActionButton.Item>
-        <ActionButton.Item
-          buttonColor="#1abc9c"
-          title="Thêm mới"
-          onPress={() => {
-            navigation.navigate('addPatient');
-          }}>
-          <Icon name="add" style={styles.actionButtonIcon} />
-        </ActionButton.Item>
+        {authen.isAdmin && (
+          <ActionButton.Item
+            buttonColor="#1abc9c"
+            title="Thêm mới"
+            onPress={() => {
+              navigation.navigate('addPatient');
+            }}>
+            <Icon name="add" style={styles.actionButtonIcon} />
+          </ActionButton.Item>
+        )}
       </ActionButton>
     </ScrollView>
   );

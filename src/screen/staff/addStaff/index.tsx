@@ -90,7 +90,7 @@ const AddStaff = ({navigation, route}: any) => {
     form.setFieldsValue({
       ...params.item.item,
     });
-    setAvtUrl(params.item.item.avatar)
+    setAvtUrl(params.item.item.avatar);
   }, [params]);
 
   const deleteAlert = () =>
@@ -167,12 +167,26 @@ const AddStaff = ({navigation, route}: any) => {
             );
             return;
           }
-          updateUserRequest.run({
-            ...value,
-            avatar: avtUrl,
-          }, params?.item?.item?.id);
+          updateUserRequest.run(
+            {
+              ...value,
+              avatar: avtUrl,
+            },
+            params?.item?.item?.id,
+          );
         }}>
-        <Field name="email">
+        <Field
+          name="email"
+          rules={[
+            {
+              required: true,
+              message: 'Không được để trống',
+            },
+            {
+              type: 'email',
+              message: 'Nhập Email hợp lệ',
+            },
+          ]}>
           {({onChange, value}, meta) => {
             return (
               <Input
@@ -192,7 +206,18 @@ const AddStaff = ({navigation, route}: any) => {
             );
           }}
         </Field>
-        <Field name="phone">
+        <Field
+          name="phone"
+          rules={[
+            {
+              required: true,
+              message: 'Không được để trống',
+            },
+            {
+              pattern: /[0-9]/,
+              message: 'Chỉ nhập số',
+            },
+          ]}>
           {({onChange, value}, meta) => {
             return (
               <Input
@@ -211,7 +236,14 @@ const AddStaff = ({navigation, route}: any) => {
             );
           }}
         </Field>
-        <Field name="fullName">
+        <Field
+          name="fullName"
+          rules={[
+            {
+              required: true,
+              message: 'Không được để trống',
+            },
+          ]}>
           {({onChange, value}, meta) => {
             return (
               <Input
@@ -230,7 +262,19 @@ const AddStaff = ({navigation, route}: any) => {
             );
           }}
         </Field>
-        <Field name="dateOfBirth">
+        <Field
+          name="dateOfBirth"
+          rules={[
+            {
+              required: true,
+              message: 'Không được để trống',
+            },
+            {
+              pattern:
+                /^((19|2[0-9])[0-9]{2})-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/,
+              message: 'Nhập ngày hợp lệ dạng YYYY-MM-DD',
+            },
+          ]}>
           {({onChange, value}, meta) => {
             return (
               <Input

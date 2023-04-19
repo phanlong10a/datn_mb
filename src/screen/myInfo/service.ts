@@ -10,10 +10,10 @@ export const createUser = () => {
     false,
   );
 };
-export const updateUser = (body, id) => {
+export const updateUser = (body) => {
   return requestApi(
     REQUEST_METHOD.POST,
-    DEV_BASE_URL + '/api/admin/user/' + id,
+    DEV_BASE_URL + 'api/user/information',
     {
       ...body,
     },

@@ -166,7 +166,8 @@ const Input: React.FC<InputProps> = ({
               <Typography
                 margin={[0, 0, 5, 0]}
                 type="Caption - Regular"
-                color="RED_500"
+                fontSize={14}
+                color="RED_100"
               >
                 {meta?.errors}
               </Typography>

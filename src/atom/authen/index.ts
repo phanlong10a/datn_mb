@@ -8,12 +8,14 @@ type TAuthenState = {
   token: string | undefined;
   loading: boolean;
   reinitialized: boolean;
+  isAdmin: any;
 };
 
 const initialState: TAuthenState = {
   token: undefined,
   loading: false,
   reinitialized: true,
+  isAdmin: false,
 };
 
 export const authenAtom = atom<TAuthenState>({
@@ -38,6 +40,11 @@ export const useRehydrateAuthenState = () => {
 
   useMount(() => {
     const token = storage.getString(StorageKey.Authen);
-    setAuthenState({loading: false, reinitialized: false, token: token});
+    setAuthenState({
+      loading: false,
+      reinitialized: false,
+      token: token,
+      isAdmin: true,
+    });
   });
 };

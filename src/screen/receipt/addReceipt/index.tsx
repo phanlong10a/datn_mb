@@ -1,14 +1,14 @@
 import Box from '@src/components/Box';
 import Button from '@src/components/Button';
 import COLORS from '@src/configs/theme/colors';
-import { deviceWidth } from '@src/configs/theme/common';
-import { useRequest } from 'ahooks';
+import {deviceWidth} from '@src/configs/theme/common';
+import {useRequest} from 'ahooks';
 import React from 'react';
-import { Alert, StyleSheet, Text, View } from 'react-native';
-import { showMessage } from 'react-native-flash-message';
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
-import { Row, Rows, Table } from 'react-native-table-component';
-import { paid } from './service';
+import {Alert, StyleSheet, Text, View} from 'react-native';
+import {showMessage} from 'react-native-flash-message';
+import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
+import {Row, Rows, Table} from 'react-native-table-component';
+import {paid} from './service';
 const tableHead = ['Tên hàng', 'Số lượng', 'Đơn giá', 'Tổng tiền'];
 const tableData = [
   ['1', '2', '3', '4'],
@@ -109,6 +109,21 @@ const AddReceipt = ({navigation, route}: any) => {
             {params?.item?.item?.created_by.fullName}
           </Text>
         </View>
+        {params?.item?.item?.paidStatus && (
+          <View
+            style={{
+              width: '100%',
+              alignItems: 'flex-start',
+              flexDirection: 'row',
+              marginBottom: 8,
+            }}>
+            <Text style={styles.text1}>Xác nhận thanh toán bởi: </Text>
+            <Text style={{...styles.text1, fontWeight: 'bold'}}>
+              {params?.item?.item?.updated_by?.fullName}
+            </Text>
+          </View>
+        )}
+
         <View
           style={{
             width: '100%',
