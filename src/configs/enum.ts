@@ -30,7 +30,7 @@ export enum VI_CUA_THUOC {
 export enum NGUYEN_LIEU {
   THUC_VAT = 'THUC_VAT',
   DONG_VAT = 'DONG_VAT',
-  KHAC = 'Khac',
+  KHAC = 'KHAC',
 }
 
 export enum SIDE_THUOC {

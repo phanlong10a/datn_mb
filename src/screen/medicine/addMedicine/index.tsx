@@ -107,7 +107,7 @@ const AddMedicine = ({navigation, route}: any) => {
       ...params.item.item,
       price_per_unit: '' + params.item.item.price_per_unit,
     });
-    setAvtUrl(params.item.item.avatar);
+    setAvtUrl(params.item.item.image);
   }, [params]);
 
   const deleteAlert = () =>

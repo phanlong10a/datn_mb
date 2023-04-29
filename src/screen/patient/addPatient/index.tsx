@@ -190,17 +190,7 @@ const AddPatient = ({navigation, route}: any) => {
             );
           }}>
           <Field
-            name="email"
-            rules={[
-              {
-                required: true,
-                message: 'Không được để trống',
-              },
-              {
-                type: 'email',
-                message: 'Nhập Email hợp lệ',
-              },
-            ]}>
+            name="email">
             {({onChange, value}, meta) => {
               return (
                 <Input

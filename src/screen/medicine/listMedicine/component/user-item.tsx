@@ -47,8 +47,8 @@ const UserItem = (item: any) => {
               marginRight: 10,
             }}
             source={{
-              uri: item?.item?.avatar
-                ? 'http://' + item.item.avatar
+              uri: item?.item?.image
+                ? 'http://' + item.item.image
                 : 'https://reactnative.dev/img/tiny_logo.png',
             }}
           />
