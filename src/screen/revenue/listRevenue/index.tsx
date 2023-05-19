@@ -22,10 +22,12 @@ const ListRevenue = ({navigation, route}: any) => {
   const getDataRequest = useRequest(getList, {
     manual: true,
     onSuccess(res, params) {
-      if (Array.isArray(res?.data?.data)) setListUser(res?.data?.data);
-      setMonth(res?.data?.month);
-      setMedicineFee(res?.data?.monthlyMedicine);
-      setMeasureFee(res?.data?.monthlyFee);
+      if (Array.isArray(res?.data?.data)) {
+        setListUser(res?.data?.data);
+        setMonth(res?.data?.month);
+        setMedicineFee(res?.data?.monthlyMedicine);
+        setMeasureFee(res?.data?.monthlyFee);
+      }
     },
   });
 
@@ -132,13 +134,7 @@ const ListRevenue = ({navigation, route}: any) => {
         </View>
       )}
       {open && (
-        <MonthPicker
-          onChange={onValueChange}
-          value={date}
-          minimumDate={new Date()}
-          maximumDate={new Date(2025, 5)}
-          locale="vi"
-        />
+        <MonthPicker onChange={onValueChange} value={date} locale="vi" />
       )}
       <FlatList
         data={listUser}
