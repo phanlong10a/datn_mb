@@ -1,11 +1,11 @@
 import Box from '@src/components/Box';
-import Icon from '@src/components/Icon';
+import Icon from 'react-native-vector-icons/Octicons';
 import ImageIcon from '@src/components/ImageIcon';
 import Typography from '@src/components/Typography';
 import theme from '@src/configs/theme';
 import COLORS from '@src/configs/theme/colors';
-import { FontFamilyNames } from '@src/configs/theme/typography';
-import React, { useMemo, useRef } from 'react';
+import {FontFamilyNames} from '@src/configs/theme/typography';
+import React, {useMemo, useRef} from 'react';
 import {
   ActivityIndicator,
   StyleSheet,
@@ -14,7 +14,7 @@ import {
   ViewStyle,
 } from 'react-native';
 
-import { InputProps } from './types';
+import {InputProps} from './types';
 
 const Input: React.FC<InputProps> = ({
   label,
@@ -40,7 +40,7 @@ const Input: React.FC<InputProps> = ({
   {
     // const inputRef = React.useRef();
     // useImperativeHandle(ref, () => inputRef.current);
-
+    const [componentHeight, setComponentHeight] = React.useState(48);
     const combinedStyle: ViewStyle[] = useMemo(() => {
       const styleObject: any = {
         margin,
@@ -81,18 +81,23 @@ const Input: React.FC<InputProps> = ({
     const onBlur = () => {
       setIsSelect(false);
     };
+    console.log(
+      StyleSheet.flatten([
+        styles.stylesText,
+        inputStyle && inputStyle,
+        {height: componentHeight},
+      ]),
+    );
     return (
       <>
         <View
           style={StyleSheet.flatten([combinedStyle])}
-          onLayout={containerOnLayout}
-        >
+          onLayout={containerOnLayout}>
           {label && (
             <Typography
               margin={[0, 0, 5, 0]}
               type="Body3 - Regular"
-              color="NEUTRAL_400"
-            >
+              color="NEUTRAL_400">
               {label}{' '}
               {required ? (
                 <Typography type="Caption - Regular" color="RED_500">
@@ -110,9 +115,8 @@ const Input: React.FC<InputProps> = ({
               props.style && props.style,
               meta &&
                 meta.errors &&
-                meta.errors[0] && { borderColor: COLORS.RED_300 },
-            ])}
-          >
+                meta.errors[0] && {borderColor: COLORS.RED_300},
+            ])}>
             {prefix}
             <Box flex={1}>
               {loading ? (
@@ -121,15 +125,17 @@ const Input: React.FC<InputProps> = ({
                 <TextInput
                   ref={textInputReference}
                   allowFontScaling={false}
-                  numberOfLines={props.numberOfLines}
                   underlineColorAndroid="transparent"
                   placeholderTextColor={COLORS.NEUTRAL_400}
-                  autoComplete={'off'}
                   onFocus={onFoc}
                   onBlur={onBlur}
                   autoCapitalize={'none'}
-                  selectionColor={'#000'}
+                  selectionColor={'#888888'}
                   autoCorrect={false}
+                  multiline={true}
+                  onContentSizeChange={e => {
+                    setComponentHeight(e.nativeEvent.contentSize.height + 8);
+                  }}
                   clearTextOnFocus={false}
                   secureTextEntry={secure}
                   onChangeText={text => onChange && onChange(text)}
@@ -139,6 +145,7 @@ const Input: React.FC<InputProps> = ({
                   style={StyleSheet.flatten([
                     styles.stylesText,
                     inputStyle && inputStyle,
+                    {height: componentHeight},
                   ])}
                 />
               )}
@@ -146,7 +153,7 @@ const Input: React.FC<InputProps> = ({
             {type === 'password' && (
               <Box margin={[0, 15, 0, 0]} activePress onPress={toggle}>
                 <Icon
-                  name={secure ? 'eye' : 'eye_close'}
+                  name={secure ? 'eye' : 'eye-closed'}
                   size={24}
                   color={COLORS.BLUE_GREY_700}
                 />
@@ -167,8 +174,7 @@ const Input: React.FC<InputProps> = ({
                 margin={[0, 0, 5, 0]}
                 type="Caption - Regular"
                 fontSize={14}
-                color="RED_100"
-              >
+                color="RED_100">
                 {meta?.errors}
               </Typography>
             </Box>
@@ -182,7 +188,6 @@ export default Input;
 
 const styles = StyleSheet.create({
   defaultInput: {
-    height: 48,
     borderWidth: 1,
     borderRadius: 12,
     paddingLeft: 15,

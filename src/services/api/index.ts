@@ -13,7 +13,6 @@ export async function requestApi(method, url, bodyGo, headers, isUploadFile) {
   const token = await storage.getString(StorageKey.Authen);
   let requestHeaders = {...headers, Authorization: 'Bearer ' + token};
   let body = bodyGo;
-  console.log("🚀 ~ file: index.ts:16 ~ requestApi ~ requestHeaders:", requestHeaders)
   if (bodyGo === null || bodyGo === undefined) {
     body = {};
   }
@@ -59,7 +58,6 @@ export async function requestApi(method, url, bodyGo, headers, isUploadFile) {
     })
     .then(() => {
       // always call
-      console.log('----API CALL FINISH----\n', url);
     });
 
   return responseData;

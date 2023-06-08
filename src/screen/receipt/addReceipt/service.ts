@@ -33,7 +33,6 @@ export const deleteApi = id => {
   );
 };
 export const paid = id => {
-  console.log("🚀 ~ file: service.ts:36 ~ paid ~ id:", id)
   return requestApi(
     REQUEST_METHOD.POST,
     DEV_BASE_URL + '/receipt/confirm/' + id,

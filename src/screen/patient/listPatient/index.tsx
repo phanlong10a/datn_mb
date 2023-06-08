@@ -15,7 +15,6 @@ const ListPatient = ({navigation, route}: any) => {
   const isFocused = useIsFocused();
 
   const [authen, setAuthen] = useAuthenState();
-  console.log('🚀 ~ file: index.tsx:18 ~ ListPatient ~ authen:', authen);
   const [listUser, setListUser] = React.useState<any>([]);
   const [searchText, setSearchText] = React.useState<string>('');
   const [showSearch, setShowSearch] = React.useState<boolean>(false);

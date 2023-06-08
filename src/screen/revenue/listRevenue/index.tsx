@@ -4,7 +4,7 @@ import COLORS from '@src/configs/theme/colors';
 import {deviceWidth} from '@src/configs/theme/common';
 import {useRequest} from 'ahooks';
 import React, {useCallback, useState} from 'react';
-import {ScrollView, StyleSheet, Text, View} from 'react-native';
+import {Dimensions, ScrollView, StyleSheet, Text, View} from 'react-native';
 import {FlatList, RefreshControl} from 'react-native-gesture-handler';
 import MonthPicker from 'react-native-month-year-picker';
 import UserItem from './component/user-item';
@@ -14,7 +14,8 @@ const ListRevenue = ({navigation, route}: any) => {
   const isFocused = useIsFocused();
   const [date, setDate] = useState(new Date());
   const [open, setOpen] = useState(false);
-  const [month, setMonth] = useState(null);
+  console.log('🚀 ~ file: index.tsx:17 ~ ListRevenue ~ open:', open);
+  const [month, setMonth] = useState('');
   const [medicineFee, setMedicineFee] = useState('');
   const [measureFee, setMeasureFee] = useState('');
   const [listUser, setListUser] = React.useState<any>([]);
@@ -23,10 +24,14 @@ const ListRevenue = ({navigation, route}: any) => {
     manual: true,
     onSuccess(res, params) {
       if (Array.isArray(res?.data?.data)) {
-        setListUser(res?.data?.data);
-        setMonth(res?.data?.month);
-        setMedicineFee(res?.data?.monthlyMedicine);
-        setMeasureFee(res?.data?.monthlyFee);
+        console.log(
+          '🚀 ~ file: index.tsx:26 ~ onSuccess ~ res?.data:',
+          res?.data?.month,
+        );
+        setListUser(res?.data?.data || []);
+        setMonth(res?.data?.month || '');
+        setMedicineFee(res?.data?.monthlyMedicine || '');
+        setMeasureFee(res?.data?.monthlyFee || '');
       }
     },
   });
@@ -34,11 +39,11 @@ const ListRevenue = ({navigation, route}: any) => {
   const showPicker = useCallback(value => setOpen(value), []);
 
   const onValueChange = useCallback(
-    (event, newDate) => {
-      const selectedDate = newDate || date;
-      getDataRequest.run(selectedDate);
+    async (event, newDate) => {
       showPicker(false);
+      const selectedDate = newDate || date;
       setDate(selectedDate);
+      getDataRequest.run(selectedDate);
     },
     [date, showPicker],
   );
@@ -80,7 +85,7 @@ const ListRevenue = ({navigation, route}: any) => {
                 fontSize: 24,
                 color: '#000000',
               }}>
-              Doanh thu của tháng :{month}
+              Doanh thu của tháng : {parseInt(month) + 1}
             </Text>
           </View>
           <View
@@ -129,6 +134,52 @@ const ListRevenue = ({navigation, route}: any) => {
                 color: '#000000',
               }}>
               Doanh thu chi tiết từng giao dịch:
+            </Text>
+          </View>
+        </View>
+      )}
+      {month && !measureFee && (
+        <View
+          style={{
+            width: '100%',
+          }}>
+          <View
+            style={{
+              width: '100%',
+              height: Dimensions.get('screen').height - 300,
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginBottom: 8,
+            }}>
+            <Text
+              style={{
+                fontSize: 24,
+                color: '#000000',
+                textAlign: 'center',
+              }}>
+              Tháng {parseInt(month) + 1} không phát sinh doanh thu
+            </Text>
+          </View>
+        </View>
+      )}
+      {!month && !measureFee && (
+        <View
+          style={{
+            width: '100%',
+          }}>
+          <View
+            style={{
+              width: '100%',
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginBottom: 8,
+            }}>
+            <Text
+              style={{
+                fontSize: 24,
+                color: '#000000',
+              }}>
+              Vui lòng chọn tháng để xem doanh thu
             </Text>
           </View>
         </View>

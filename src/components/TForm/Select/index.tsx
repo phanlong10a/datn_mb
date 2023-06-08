@@ -143,7 +143,7 @@ const Select: React.FC<SelectProps> = ({
           onPress={() => setState({visible: true})}>
           {props.value ? (
             <>
-              <Typography type="Body2 - Regular" color="NEUTRAL_400">
+              <Typography type="Body1 - Regular" color="BLACK">
                 {options.find(e => e.value === props.value)?.label}
               </Typography>
             </>

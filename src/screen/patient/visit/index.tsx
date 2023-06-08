@@ -1,30 +1,30 @@
-import { useFocusEffect } from '@react-navigation/native';
+import {useFocusEffect} from '@react-navigation/native';
 import Box from '@src/components/Box';
 import Button from '@src/components/Button';
 import TForm from '@src/components/TForm';
 import Input from '@src/components/TForm/Input';
 import Typography from '@src/components/Typography';
 import COLORS from '@src/configs/theme/colors';
-import { deviceWidth } from '@src/configs/theme/common';
-import { getListMedicine } from '@src/screen/medicine/listMedicine/services';
-import { useRequest } from 'ahooks';
-import { useIsFocused } from '@react-navigation/native';
-import { Field, useForm } from 'rc-field-form';
-import React, { useState } from 'react';
-import { Alert, Dimensions, Image, StyleSheet, Text, View } from 'react-native';
-import { showMessage } from 'react-native-flash-message';
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
-import { createApi, deleteApi, updateApi } from './service';
+import {deviceWidth} from '@src/configs/theme/common';
+import {getListMedicine} from '@src/screen/medicine/listMedicine/services';
+import {useRequest} from 'ahooks';
+import {useIsFocused} from '@react-navigation/native';
+import {Field, useForm} from 'rc-field-form';
+import React, {useState} from 'react';
+import {Alert, Dimensions, Image, StyleSheet, Text, View} from 'react-native';
+import {showMessage} from 'react-native-flash-message';
+import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
+import {createApi, deleteApi, updateApi} from './service';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Select from '@src/components/TForm/Select';
-const Visit = ({ navigation, route }: any) => {
+const Visit = ({navigation, route}: any) => {
   const params = route.params;
   const isFocused = useIsFocused();
   const [inputFields, setAddMedicine] = useState([
-    { medicine: '', amount_dosage: '', key: 1 }
-  ])
+    {medicine: '', amount_dosage: '', key: 1},
+  ]);
 
-  const [listMedicine, setListMedicine] = useState([])
+  const [listMedicine, setListMedicine] = useState([]);
 
   const [avtUrl, setAvtUrl] = React.useState(null);
   const [form] = useForm();
@@ -32,20 +32,20 @@ const Visit = ({ navigation, route }: any) => {
   const getMedicine = useRequest(getListMedicine, {
     manual: true,
     onSuccess(res, params) {
-      if (Array.isArray(res?.data?.data)) setListMedicine(res?.data?.data?.map(item => {
-        return {
-          value: item.id,
-          label: item.name,
-        }
-      }));
+      if (Array.isArray(res?.data?.data))
+        setListMedicine(
+          res?.data?.data?.map(item => {
+            return {
+              value: item.id,
+              label: item.name,
+            };
+          }),
+        );
     },
   });
   React.useEffect(() => {
-    getMedicine.run(
-      100000,
-      0, ''
-    )
-  }, [isFocused])
+    getMedicine.run(100000, 0, '');
+  }, [isFocused]);
 
   const createRequest = useRequest(createApi, {
     manual: true,
@@ -87,45 +87,44 @@ const Visit = ({ navigation, route }: any) => {
     setAvtUrl(params.item.item.avatar);
   }, [params]);
 
-  const removeItemFromList = (index) => {
+  const removeItemFromList = index => {
     const inputFieldsClone = [...inputFields];
     inputFieldsClone.splice(index, 1);
-    setAddMedicine(inputFieldsClone)
-  }
-
+    setAddMedicine(inputFieldsClone);
+  };
 
   const onChangeMedicine = (value, index) => {
     const inputFieldsClone = [...inputFields];
     inputFieldsClone[index] = {
       ...inputFieldsClone[index],
-      medicine: value
-    }
-    setAddMedicine(inputFieldsClone)
-  }
+      medicine: value,
+    };
+    setAddMedicine(inputFieldsClone);
+  };
 
   const onChangeValueMedicine = (value, index) => {
     const inputFieldsClone = [...inputFields];
     inputFieldsClone[index] = {
       ...inputFieldsClone[index],
-      amount_dosage: value
-    }
-    setAddMedicine(inputFieldsClone)
-  }
+      amount_dosage: value,
+    };
+    setAddMedicine(inputFieldsClone);
+  };
 
-  const onSubmitValue = (value) => {
+  const onSubmitValue = value => {
     const patientId = params?.item?.item?.id;
     const valueSubmit = {
       ...value,
       patientId,
-      medicine: inputFields.map((item) => {
+      medicine: inputFields.map(item => {
         return {
           ...item,
-          amount_dosage: +item.amount_dosage
-        }
-      })
-    }
-    createRequest.run(valueSubmit)
-  }
+          amount_dosage: +item.amount_dosage,
+        };
+      }),
+    };
+    createRequest.run(valueSubmit);
+  };
 
   return (
     <Box flex={1}>
@@ -156,8 +155,7 @@ const Visit = ({ navigation, route }: any) => {
               flexGrow: 1,
               flexDirection: 'row',
               alignItems: 'center',
-            }}
-          >
+            }}>
             <View>
               <Image
                 style={{
@@ -174,8 +172,13 @@ const Visit = ({ navigation, route }: any) => {
               />
             </View>
             <View>
-              <Text style={styles.textHead}>{params?.item?.item?.fullName}</Text>
-              <Text style={styles.text} numberOfLines={1} ellipsizeMode={'tail'}>
+              <Text style={styles.textHead}>
+                {params?.item?.item?.fullName}
+              </Text>
+              <Text
+                style={styles.text}
+                numberOfLines={1}
+                ellipsizeMode={'tail'}>
                 {params?.item?.item?.phone}
               </Text>
             </View>
@@ -184,18 +187,28 @@ const Visit = ({ navigation, route }: any) => {
         <TForm
           form={form}
           onFinish={value => {
-            onSubmitValue(value)
+            onSubmitValue(value);
           }}>
           <Typography
             fontSize={15}
             margin={[0, 0, 5, 0]}
             type="Caption - Regular"
-            color="BLACK"
-          >
+            color="BLACK">
             Thông tin khám bệnh
           </Typography>
-          <Field name="measure_fee">
-            {({ onChange, value }, meta) => {
+          <Field
+            name="measure_fee"
+            rules={[
+              {
+                required: true,
+                message: 'Không được để trống',
+              },
+              {
+                pattern: /[0-9]/,
+                message: 'Chỉ nhập số',
+              },
+            ]}>
+            {({onChange, value}, meta) => {
               return (
                 <Input
                   onChange={onChange}
@@ -214,8 +227,15 @@ const Visit = ({ navigation, route }: any) => {
               );
             }}
           </Field>
-          <Field name="diagnose">
-            {({ onChange, value }, meta) => {
+          <Field
+            name="diagnose"
+            rules={[
+              {
+                required: true,
+                message: 'Không được để trống',
+              },
+            ]}>
+            {({onChange, value}, meta) => {
               return (
                 <Input
                   onChange={onChange}
@@ -234,8 +254,15 @@ const Visit = ({ navigation, route }: any) => {
               );
             }}
           </Field>
-          <Field name="description">
-            {({ onChange, value }, meta) => {
+          <Field
+            name="description"
+            rules={[
+              {
+                required: true,
+                message: 'Không được để trống',
+              },
+            ]}>
+            {({onChange, value}, meta) => {
               return (
                 <Input
                   onChange={onChange}
@@ -258,12 +285,18 @@ const Visit = ({ navigation, route }: any) => {
             fontSize={15}
             margin={[0, 0, 5, 0]}
             type="Caption - Regular"
-            color="BLACK"
-          >
+            color="BLACK">
             Thang thuốc kê đơn
           </Typography>
-          <Field name="total_count">
-            {({ onChange, value }, meta) => {
+          <Field
+            name="total_count"
+            rules={[
+              {
+                required: inputFields.length > 0 ? true : false,
+                message: 'Không được để trống',
+              },
+            ]}>
+            {({onChange, value}, meta) => {
               return (
                 <Input
                   onChange={onChange}
@@ -283,77 +316,84 @@ const Visit = ({ navigation, route }: any) => {
             }}
           </Field>
           <Field>
-            {({ onChange, value }, _meta) => {
+            {({onChange, value}, _meta) => {
               return inputFields.map((_item, _index) => {
-                return <View style={{
-                  flexDirection: 'row',
-                  marginBottom: _index + 1 === inputFields.length ? 8 : 16,
-                  alignItems: 'center'
-                }}>
-                  <Select
-                    placeholder={'Chọn thuốc'}
+                return (
+                  <View
                     style={{
-                      backgroundColor: '#fff',
-                      width: deviceWidth - 20 - deviceWidth / 2,
-                      marginRight: 30,
-                      borderRadius: 16,
-                      height: 50
-                    }}
-                    options={listMedicine}
-                    onChange={(value) => {
-                      onChangeMedicine(value, _index)
-                    }}
-                    // imageApi={uploadImage}
-                    value={_item.medicine}
-                    preicon={false}
-                  />
-                  <Input
-                    onChange={(value) => {
-                      onChangeValueMedicine(value, _index)
-                    }}
-                    style={{
-                      backgroundColor: '#fff',
-                      width: deviceWidth - 110 - deviceWidth / 2,
-                    }}
-                    inputStyle={{
-                      color: '#000',
-                    }}
-                    value={_item.amount_dosage}
-                    placeholder={''}
-                  />
-                  <TouchableOpacity style={{
-                    marginLeft: 16
-                  }}
-                    activeOpacity={0.8}
-                    onPress={() => {
-                      removeItemFromList(_index)
-                    }}
-                  >
-                    <Icon name="delete-outline" style={styles.actionButtonIcon} />
-                  </TouchableOpacity>
-                </View>
-              })
+                      flexDirection: 'row',
+                      marginBottom: _index + 1 === inputFields.length ? 8 : 16,
+                      alignItems: 'center',
+                    }}>
+                    <Select
+                      placeholder={'Chọn thuốc'}
+                      style={{
+                        backgroundColor: '#fff',
+                        width: deviceWidth - 60 - deviceWidth / 2,
+                        marginRight: 30,
+                        borderRadius: 16,
+                        height: 50,
+                      }}
+                      options={listMedicine}
+                      onChange={value => {
+                        onChangeMedicine(value, _index);
+                      }}
+                      // imageApi={uploadImage}
+                      value={_item.medicine}
+                      preicon={false}
+                    />
+                    <Input
+                      onChange={value => {
+                        onChangeValueMedicine(value, _index);
+                      }}
+                      style={{
+                        backgroundColor: '#fff',
+                        width: deviceWidth - 70 - deviceWidth / 2,
+                      }}
+                      inputStyle={{
+                        color: '#000',
+                      }}
+                      value={_item.amount_dosage}
+                      placeholder={'Số lượng'}
+                    />
+                    <TouchableOpacity
+                      style={{
+                        marginLeft: 16,
+                      }}
+                      activeOpacity={0.8}
+                      onPress={() => {
+                        removeItemFromList(_index);
+                      }}>
+                      <Icon
+                        name="delete-outline"
+                        style={styles.actionButtonIcon}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                );
+              });
             }}
           </Field>
-          <TouchableOpacity activeOpacity={0.7} onPress={() => {
-            const addMedicine = [...inputFields]
-            addMedicine.push({
-              medicine: '', amount_dosage: '', key: addMedicine.length + 1
-            })
-            setAddMedicine(addMedicine)
-          }}
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={() => {
+              const addMedicine = [...inputFields];
+              addMedicine.push({
+                medicine: '',
+                amount_dosage: '',
+                key: addMedicine.length + 1,
+              });
+              setAddMedicine(addMedicine);
+            }}
             style={{
               flexDirection: 'row',
               backgroundColor: COLORS.ACCENT_500,
               padding: 16,
               marginBottom: 16,
-              borderRadius: 16
-            }}
-          >
+              borderRadius: 16,
+            }}>
             <Icon name="add" style={styles.actionButtonIcon} />
-            <Text>
-              Thêm thuốc
-            </Text>
+            <Text>Thêm thuốc</Text>
           </TouchableOpacity>
         </TForm>
         <TouchableOpacity
@@ -371,9 +411,7 @@ const Visit = ({ navigation, route }: any) => {
               justifyContent: 'center',
             }}
             // @ts-ignore
-            label={
-              'Tạo hoá đơn'
-            }></Button>
+            label={'Tạo hoá đơn'}></Button>
         </TouchableOpacity>
         <View
           style={{

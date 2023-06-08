@@ -11,6 +11,7 @@ import React from 'react';
 import {ImageBackground, Text, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {onLogin} from './service';
+import { showMessage } from 'react-native-flash-message';
 
 const Welcome = ({}: any) => {
   const [form] = useForm();
@@ -19,12 +20,17 @@ const Welcome = ({}: any) => {
   const requesetLogin = useRequest(onLogin, {
     manual: true,
     onSuccess(data: any) {
-      console.log('🚀 ~ file: index.tsx:22 ~ onSuccess ~ data:', data.data);
       storage.set(StorageKey.Authen, data.data.token);
       setAuthen({
         ...authen,
         token: data.data.token,
         isAdmin: data.data.isAdmin,
+      });
+    },
+    onError(e, params) {
+      showMessage({
+        message: "Sai tên tài khoản hoặc mật khẩu",
+        type: 'danger',
       });
     },
   });

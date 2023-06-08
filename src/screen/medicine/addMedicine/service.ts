@@ -13,7 +13,6 @@ export const createApi = (body, id) => {
   );
 };
 export const updateApi = (body, id) => {
-  console.log("🚀 ~ file: service.ts:16 ~ updateApi ~ body:", body)
   return requestApi(
     REQUEST_METHOD.PUT,
     DEV_BASE_URL + '/medicine/' + id,
